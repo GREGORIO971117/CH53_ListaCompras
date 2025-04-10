@@ -1,6 +1,7 @@
 let txtName=document.getElementById("Name");
 let txtNumber=document.getElementById("Number");
 let btnAgregar=document.getElementById("btnAgregar");
+let btnClear=document.getElementById("btnClear");
 let alertValidacionesTexto=document.getElementById("alertValidacionesTexto");
 let alertValidaciones=document.getElementById("alertValidaciones");
 const tablaListaCompras=document.getElementById("tablaListaCompras");
@@ -103,31 +104,39 @@ btnAgregar.addEventListener("click",function(event){
 
 });
 
+btnClear.addEventListener("click",function(event){
+    event.preventDefault();
+    localStorage.removeItem("resumen");
+    localStorage.removeItem("datos");
+    window.location.reload();
+});
+
 window.addEventListener("load",function(event){
     event.preventDefault();
 
     if (this.localStorage.getItem("datos")!=null) {
-       let datos=JSON.parse(this.localStorage.getItem("datos"));
-        nombre=datos.nombre;
-        cantidad=datos.cantidad;
-        precio=datos.precio;
+       datos = JSON.parse(this.localStorage.getItem("datos"));
     }
+    datos.forEach((d)=> {
+        let row=
+        `<tr>
+            <td>${d.cont}</td>
+            <td>${d.nombre}</td>
+            <td>${d.cantidad}</td>
+            <td>${d.precio}</td>
+        </tr>`;
+        cuerpoTabla.insertAdjacentHTML("beforeend",row);
+    });
 
     if (this.localStorage.getItem("resumen")!=null) {
         let resumen=JSON.parse(this.localStorage.getItem("resumen"));
         costoTotal=resumen.costoTotal;
         totalEnProductos=resumen.totalEnProductos;
         cont=resumen.cont;
-
     }
-
-    cuerpoTabla.insertAdjacentHTML("beforeend",row); 
-    costoTotal+=precio*Number(txtNumber.value);
-    totalEnProductos+=Number(txtNumber.value);
 
     precioTotal.innerText="$"+costoTotal.toFixed(2);
     productosTotal.innerHTML=totalEnProductos;
     contadorProductos.innerHTML=cont;
-
 
 });//Se termina el windows load
